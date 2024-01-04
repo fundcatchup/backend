@@ -1,0 +1,43 @@
+log:
+  level: debug
+  format: json
+
+authenticators:
+  bearer_token:
+    enabled: true
+    config:
+      check_session_url: http://fundcatchup-host:3458/sessions
+      preserve_path: true
+      subject_from: subject.id
+  
+  anonymous:
+    enabled: true
+    config:
+      subject: anonymous
+
+authorizers:
+  allow:
+    enabled: true
+
+mutators:
+  header:
+    enabled: true
+    config:
+      headers:
+        X-User-ID: "{{ print .Subject }}"
+        X-Session-ID: "{{ print .Extra.session_id }}"
+        authorization: "" # redact the authorization token
+
+errors:
+  fallback:
+    - json
+  handlers:
+    json:
+      enabled: true
+      config:
+        verbose: true
+
+access_rules:
+  repositories:
+    - file:///home/ory/oathkeeper_rules.yml
+  matching_strategy: regexp

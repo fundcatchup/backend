@@ -1,0 +1,17 @@
+rust_library(
+    name = "common",
+    edition = "2021",
+    deps = [
+        "//third-party/rust:anyhow",
+        "//third-party/rust:async-graphql",
+        "//third-party/rust:serde",
+        "//third-party/rust:sqlx",
+        "//third-party/rust:uuid",
+    ],
+    srcs = glob(["src/**/*.rs"]),
+    env = {
+        "CARGO_PKG_NAME": "common" ,
+        "CARGO_PKG_VERSION": "0.1.0" ,
+    },
+    visibility = ["PUBLIC"],
+)

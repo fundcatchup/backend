@@ -1,0 +1,13 @@
+- id: fundcatchup-api
+  upstream:
+    url: "http://fundcatchup-host:4004"
+  match:
+    url: "<(http|https)>://<[a-zA-Z0-9-.:]+>/graphql"
+    methods: ["POST", "GET", "OPTIONS"]
+  authenticators:
+    - handler: bearer_token
+    - handler: anonymous
+  authorizer:
+    handler: allow
+  mutators:
+    - handler: header

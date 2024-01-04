@@ -1,0 +1,22 @@
+.vscode
+.env.local
+
+# Buck
+/buck-out/
+
+# Nix builds
+/result
+
+# direnv
+.direnv
+
+# rust
+target
+
+# vendir
+/.vendir-tmp/
+
+# E2E Test
+-
+.e2e-*.log
+.*_pid

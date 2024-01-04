@@ -1,0 +1,20 @@
+def _buck2_dep_inputs(target):
+    cmd = [
+        "buck2",
+        "uquery",
+        "\"inputs(deps('{}'))\"".format(target),
+    ]
+    file_paths = str(local(" ".join(cmd))).splitlines()
+
+    return file_paths
+
+
+docker_compose("./docker-compose.deps.yml", project_name = "fundcatchup-dev")
+docker_groups = {
+    "api": ["apollo-router", "oathkeeper"],
+    "tracing": ["otel-agent"]
+}
+for service in docker_groups["api"]:
+    dc_resource(service, labels = ["api"])
+for service in docker_groups["tracing"]:
+    dc_resource(service, labels = ["tracing"])

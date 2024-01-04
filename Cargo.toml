@@ -1,0 +1,55 @@
+[profile.release]
+debug = true
+
+[workspace]
+resolver = "2"
+members = ["lib/tracing-rs", "lib/common"]
+
+[workspace.dependencies]
+anyhow = "1.0.75"
+async-graphql = { version = "6.0.9", default-features = false, features = [
+  "tracing",
+  "chrono",
+  "playground",
+] }
+async-graphql-axum = "6.0.9"
+axum = { version = "0.6.20", default-features = false, features = ["headers"] }
+axum-tracing-opentelemetry = "0.14.1"
+clap = { version = "4.4", features = ["derive", "env"] }
+chrono = { version = "0.4.28", features = ["serde"] }
+jsonwebtoken = "8.3.0"
+opentelemetry-otlp = { version = "0.13.0", features = [
+  "http-proto",
+  "reqwest-client",
+] }
+opentelemetry = { version = "0.20.0", features = ["trace", "rt-tokio"] }
+opentelemetry-semantic-conventions = "0.12.0"
+phonenumber = "0.3"
+prost = "0.11.9"
+prost-types = "0.11.9"
+prost-build = "0.11.9"
+rand = { version = "0.8.4", features = ["small_rng"] }
+redis = "0.23.3"
+reqwest = { version = "0.11.20", default-features = false, features = [
+  "json",
+  "rustls-tls",
+] }
+sha256 = "1.4.0"
+serde = { version = "1.0.158", features = ["derive"] }
+serde_json = "1.0.108"
+serde_yaml = "0.9.27"
+sqlx = { version = "0.7.2", features = [
+  "runtime-tokio-rustls",
+  "postgres",
+  "uuid",
+  "chrono",
+  "bigdecimal",
+] }
+thiserror = "1.0.36"
+tokio = { version = "1.33.0", features = ["full"] }
+tonic = { version = "0.9.2", features = ["tls", "tls-webpki-roots"] }
+tonic-build = { version = "0.9.2", features = ["prost"] }
+tracing = "0.1.37"
+tracing-subscriber = { version = "0.3.16", features = ["env-filter", "json"] }
+tracing-opentelemetry = "0.20.0"
+uuid = { version = "1.4.0", features = ["v4", "serde"] }

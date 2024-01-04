@@ -1,0 +1,36 @@
+---
+version: "3"
+services:
+  oathkeeper:
+    image: oryd/oathkeeper:v0.40.4-distroless
+    command: serve -c /home/ory/oathkeeper.yml --sqa-opt-out
+    ports:
+      - 4002:4455
+    extra_hosts:
+      - fundcatchup-host:host-gateway
+    volumes:
+      - ./ory:/home/ory
+
+  apollo-router:
+    image: ghcr.io/apollographql/router:v1.25.0
+    ports:
+      - 4004:4004
+    extra_hosts:
+      - fundcatchup-host:host-gateway
+    environment:
+      - APOLLO_ROUTER_SUPERGRAPH_PATH=/dev/apollo/supergraph.graphql
+      - APOLLO_ROUTER_CONFIG_PATH=/dev/apollo/router.yaml
+    volumes:
+      - ./apollo:/dev/apollo
+
+  otel-agent:
+    ports:
+      - "4318:4318" #! http receiver
+      - "4317:4317" #! grpc receiver
+    image: otel/opentelemetry-collector-contrib:0.84.0
+    command: ["--config=/etc/otel-agent-config.yaml"]
+    environment:
+      - HONEYCOMB_DATASET=${HONEYCOMB_DATASET}
+      - HONEYCOMB_API_KEY=${HONEYCOMB_API_KEY}
+    volumes:
+      - ./otel-agent.yml:/etc/otel-agent-config.yaml

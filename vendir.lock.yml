@@ -1,0 +1,35 @@
+apiVersion: vendir.k14s.io/v1alpha1
+directories:
+- contents:
+  - git:
+      commitTitle: 'prelude/rust: Process CARGO_MANIFEST_DIR during rustdoc test...'
+      sha: 98a6e7b70dc82a62784f80897d72fefdfb54d70f
+      tags:
+      - "2023-10-15"
+    path: .
+  path: prelude
+- contents:
+  - git:
+      commitTitle: 'prelude/rust: Process CARGO_MANIFEST_DIR during rustdoc test...'
+      sha: 98a6e7b70dc82a62784f80897d72fefdfb54d70f
+      tags:
+      - "2023-10-15"
+    path: .
+  path: third-party/macros
+- contents:
+  - git:
+      commitTitle: 'client: Fix "ctrl-c was pressed" bug...'
+      sha: f3c685667ef22d0130687003012b6960abec6b3b
+      tags:
+      - 2023-10-15-425-gf3c685667
+    path: .
+  path: third-party/rust/fixups/ring/include
+- contents:
+  - git:
+      commitTitle: Document what labels() query function is doing in buck1...
+      sha: 7b713a68c49c6be472ea97c0be30adc4b79a3874
+      tags:
+      - 2023-11-01-192-g7b713a68c
+    path: .
+  path: third-party/protobuf
+kind: LockConfig

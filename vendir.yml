@@ -1,0 +1,39 @@
+apiVersion: vendir.k14s.io/v1alpha1
+kind: Config
+directories:
+- path: prelude
+  contents:
+  - path: .
+    git:
+      url: https://github.com/facebook/buck2.git
+      ref: "2023-10-15"
+    includePaths:
+    - prelude/**/*
+    newRootPath: prelude
+- path: third-party/macros
+  contents:
+  - path: .
+    git:
+      url: https://github.com/facebook/buck2.git
+      ref: "2023-10-15"
+    includePaths:
+    - shim/third-party/macros/*
+    newRootPath: shim/third-party/macros
+- path: third-party/rust/fixups/ring/include
+  contents:
+  - path: .
+    git:
+      url: https://github.com/facebook/buck2.git
+      ref: f3c685667ef22d0130687003012b6960abec6b3b
+    includePaths:
+    - shim/third-party/rust/fixups/ring/include/**/*
+    newRootPath: shim/third-party/rust/fixups/ring/include
+- path: third-party/protobuf
+  contents:
+  - path: .
+    git:
+      url: https://github.com/facebook/buck2.git
+      ref: 7b713a68c49c6be472ea97c0be30adc4b79a3874
+    includePaths:
+    - shim/third-party/proto/**/*
+    newRootPath: shim/third-party/proto
