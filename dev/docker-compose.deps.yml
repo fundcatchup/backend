@@ -34,3 +34,12 @@ services:
       - HONEYCOMB_API_KEY=${HONEYCOMB_API_KEY}
     volumes:
       - ./otel-agent.yml:/etc/otel-agent-config.yaml
+
+  api-pg:
+    image: postgres:14.1
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=pg
+    ports:
+      - 5433:5432

@@ -8,10 +8,26 @@ def _buck2_dep_inputs(target):
 
     return file_paths
 
+api_target = "//core/api:api"
+local_resource(
+    "api",
+    labels = ["api"],
+    cmd = "buck2 build {}".format(api_target),
+    serve_cmd = "buck2 run {} daemon servers".format(api_target),
+    serve_env = {
+      "PG_CON": "postgres://user:password@localhost:5433/pg",
+      "API_CONFIG": "../core/api/api.yml",
+      "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
+    },
+    deps = _buck2_dep_inputs(api_target),
+    resource_deps = [
+       "api-pg",
+    ]
+)
 
 docker_compose("./docker-compose.deps.yml", project_name = "fundcatchup-dev")
 docker_groups = {
-    "api": ["apollo-router", "oathkeeper"],
+    "api": ["apollo-router", "oathkeeper", "api-pg"],
     "tracing": ["otel-agent"]
 }
 for service in docker_groups["api"]:

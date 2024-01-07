@@ -1,2 +1,6 @@
 federation_version: =2.3.2
 subgraphs:
+  api:
+    routing_url: http://fundcatchup-host:4051/graphql
+    schema:
+      file: ${env.API_SCHEMA:-../../core/api/subgraph/schema.subgraph}

@@ -2,7 +2,9 @@
 
 set -e
 
-TARGETS=()
+TARGETS=(
+    "//core/api:update-schema"
+)
 
 buck2 build "${TARGETS[@]}"
 

@@ -20,3 +20,6 @@ target
 -
 .e2e-*.log
 .*_pid
+
+# Applications
+.api

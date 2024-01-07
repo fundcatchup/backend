@@ -141,7 +141,7 @@
     in
       with pkgs; {
         packages = {
-          auth = rustDerivation {pkgName = "auth";};
+          api = rustDerivation {pkgName = "api";};
 
           dockerImage = dockerTools.buildImage {
             name = "fundcatchup-dev";

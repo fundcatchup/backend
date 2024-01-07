@@ -3,7 +3,7 @@ debug = true
 
 [workspace]
 resolver = "2"
-members = ["lib/tracing-rs", "lib/common"]
+members = ["lib/tracing-rs", "lib/common", "core/api"]
 
 [workspace.dependencies]
 anyhow = "1.0.75"

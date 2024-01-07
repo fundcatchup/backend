@@ -1,0 +1,12 @@
+load(":defs.bzl", "rover_distribution")
+
+rover_distribution(
+    name = "distribution",
+    version = "0.21.0",
+)
+
+alias(
+    name = "rover",
+    actual = ":distribution[rover]",
+    visibility = ["PUBLIC"],
+)

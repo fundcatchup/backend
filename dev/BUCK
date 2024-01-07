@@ -15,3 +15,39 @@ python_bootstrap_binary(
     main = "healthcheck.py",
     visibility = ["PUBLIC"],
 )
+
+load("@toolchains//rover:macros.bzl", "supergraph", "diff_check", "dev_update_file")
+
+supergraph(
+  name = "supergraph",
+  config = "apollo/supergraph-config.yaml",
+  subgraphs = {
+    "API_SCHEMA": "//core/api:sdl",
+  },
+  rover_bin = "//third-party/rover:rover"
+)
+
+dev_update_file(
+  name = "update-supergraph",
+  generated = ":supergraph",
+  out = "apollo/supergraph.graphql"
+)
+
+diff_check(
+  name = "supergraph-diff",
+  original = "apollo/supergraph.graphql",
+  new = ":supergraph"
+)
+
+sh_binary(
+  name = "update-schemas",
+  main = "bin/update-schemas.sh",
+)
+
+test_suite(
+    name = "check-sdls",
+    tests = [
+        ":supergraph-diff",
+        "//core/api:schema-diff",
+    ],
+)
