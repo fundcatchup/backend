@@ -2793,6 +2793,89 @@ cargo.rust_library(
 )
 
 http_archive(
+    name = "iso_country-0.1.4.crate",
+    sha256 = "20633e788d3948ea7336861fdb09ec247f5dae4267e8f0743fa97de26c28624d",
+    strip_prefix = "iso_country-0.1.4",
+    urls = ["https://crates.io/api/v1/crates/iso_country/0.1.4/download"],
+    visibility = [],
+)
+
+cargo.rust_library(
+    name = "iso_country-0.1.4",
+    srcs = [":iso_country-0.1.4.crate"],
+    crate = "iso_country",
+    crate_root = "iso_country-0.1.4.crate/src/lib.rs",
+    edition = "2015",
+    visibility = [],
+    deps = [":lazy_static-1.4.0"],
+)
+
+alias(
+    name = "iso_currency",
+    actual = ":iso_currency-0.4.4",
+    visibility = ["PUBLIC"],
+)
+
+http_archive(
+    name = "iso_currency-0.4.4.crate",
+    sha256 = "33f07181be95c82347a07cf4caf43d2acd8a7e8d08ef1db75e10ed5a9aec3c1b",
+    strip_prefix = "iso_currency-0.4.4",
+    urls = ["https://crates.io/api/v1/crates/iso_currency/0.4.4/download"],
+    visibility = [],
+)
+
+cargo.rust_library(
+    name = "iso_currency-0.4.4",
+    srcs = [":iso_currency-0.4.4.crate"],
+    crate = "iso_currency",
+    crate_root = "iso_currency-0.4.4.crate/src/lib.rs",
+    edition = "2018",
+    env = {
+        "OUT_DIR": ".",
+    },
+    features = [
+        "default",
+        "serde",
+        "with-serde",
+    ],
+    rustc_flags = ["@$(location :iso_currency-0.4.4-build-script-run[rustc_flags])"],
+    visibility = [],
+    deps = [
+        ":iso_country-0.1.4",
+        ":serde-1.0.192",
+    ],
+)
+
+cargo.rust_binary(
+    name = "iso_currency-0.4.4-build-script-build",
+    srcs = [":iso_currency-0.4.4.crate"],
+    crate = "build_script_build",
+    crate_root = "iso_currency-0.4.4.crate/build.rs",
+    edition = "2018",
+    env = {
+        "OUT_DIR": ".",
+    },
+    features = [
+        "default",
+        "serde",
+        "with-serde",
+    ],
+    visibility = [],
+)
+
+buildscript_run(
+    name = "iso_currency-0.4.4-build-script-run",
+    package_name = "iso_currency",
+    buildscript_rule = ":iso_currency-0.4.4-build-script-build",
+    features = [
+        "default",
+        "serde",
+        "with-serde",
+    ],
+    version = "0.4.4",
+)
+
+http_archive(
     name = "itertools-0.10.5.crate",
     sha256 = "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473",
     strip_prefix = "itertools-0.10.5",
@@ -8096,6 +8179,7 @@ cargo.rust_binary(
         ":axum-tracing-opentelemetry-0.14.1",
         ":chrono-0.4.31",
         ":clap-4.4.7",
+        ":iso_currency-0.4.4",
         ":jsonwebtoken-8.3.0",
         ":opentelemetry-0.20.0",
         ":opentelemetry-otlp-0.13.0",
@@ -8562,18 +8646,18 @@ cargo.rust_library(
 )
 
 http_archive(
-    name = "toml_datetime-0.6.5.crate",
-    sha256 = "3550f4e9685620ac18a50ed434eb3aec30db8ba93b0287467bca5826ea25baf1",
-    strip_prefix = "toml_datetime-0.6.5",
-    urls = ["https://crates.io/api/v1/crates/toml_datetime/0.6.5/download"],
+    name = "toml_datetime-0.6.3.crate",
+    sha256 = "7cda73e2f1397b1262d6dfdcef8aafae14d1de7748d66822d3bfeeb6d03e5e4b",
+    strip_prefix = "toml_datetime-0.6.3",
+    urls = ["https://crates.io/api/v1/crates/toml_datetime/0.6.3/download"],
     visibility = [],
 )
 
 cargo.rust_library(
-    name = "toml_datetime-0.6.5",
-    srcs = [":toml_datetime-0.6.5.crate"],
+    name = "toml_datetime-0.6.3",
+    srcs = [":toml_datetime-0.6.3.crate"],
     crate = "toml_datetime",
-    crate_root = "toml_datetime-0.6.5.crate/src/lib.rs",
+    crate_root = "toml_datetime-0.6.3.crate/src/lib.rs",
     edition = "2021",
     visibility = [],
 )
@@ -8596,7 +8680,7 @@ cargo.rust_library(
     visibility = [],
     deps = [
         ":indexmap-2.1.0",
-        ":toml_datetime-0.6.5",
+        ":toml_datetime-0.6.3",
         ":winnow-0.5.19",
     ],
 )

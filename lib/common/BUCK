@@ -4,6 +4,7 @@ rust_library(
     deps = [
         "//third-party/rust:anyhow",
         "//third-party/rust:async-graphql",
+        "//third-party/rust:rand",
         "//third-party/rust:serde",
         "//third-party/rust:sqlx",
         "//third-party/rust:uuid",
@@ -14,4 +15,31 @@ rust_library(
         "CARGO_PKG_VERSION": "0.1.0" ,
     },
     visibility = ["PUBLIC"],
+)
+
+rust_test(
+    name = "test-unit",
+    edition = "2021",
+    deps = [
+        "//third-party/rust:anyhow",
+        "//third-party/rust:async-graphql",
+        "//third-party/rust:rand",
+        "//third-party/rust:serde",
+        "//third-party/rust:sqlx",
+        "//third-party/rust:uuid",
+    ],
+    srcs = glob(["src/**/*.rs"]),
+    env = {
+        "CARGO_PKG_NAME": "common" ,
+        "CARGO_PKG_VERSION": "0.1.0" ,
+    },
+    visibility = ["PUBLIC"],
+    crate_root = "src/lib.rs",
+)
+
+test_suite(
+    name = "test",
+    tests = [
+        ":test-unit"
+    ],
 )
