@@ -101,4 +101,33 @@ mod tests {
 
         assert!(different_results.len() > 1);
     }
+
+    #[test]
+    fn test_divide_variance_always_max_one() {
+        for value in 1..=1_00_000 {
+            for parts in 1..=20 {
+                let money = Money::new(value);
+                let results = money.divide(parts);
+
+                assert_eq!(results.len(), parts as usize);
+
+                let total: u64 = results.iter().sum();
+                assert_eq!(total, value);
+
+                if results.is_empty() {
+                    continue;
+                }
+
+                let min = results.iter().min().unwrap();
+                let max = results.iter().max().unwrap();
+                assert!(
+                    max - min <= 1,
+                    "Variance should be at most 1 (failed at value: {}, parts: {}, results: {:?})",
+                    value,
+                    parts,
+                    results
+                );
+            }
+        }
+    }
 }
