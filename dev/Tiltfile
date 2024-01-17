@@ -27,9 +27,12 @@ local_resource(
 
 docker_compose("./docker-compose.deps.yml", project_name = "fundcatchup-dev")
 docker_groups = {
-    "api": ["apollo-router", "oathkeeper", "api-pg"],
+    "auth": ["oathkeeper", "kratos", "kratos-pg", "mailslurper"],
+    "api": ["apollo-router", "api-pg"],
     "tracing": ["otel-agent"]
 }
+for service in docker_groups["auth"]:
+    dc_resource(service, labels = ["auth"])
 for service in docker_groups["api"]:
     dc_resource(service, labels = ["api"])
 for service in docker_groups["tracing"]:

@@ -11,6 +11,36 @@ services:
     volumes:
       - ./ory:/home/ory
 
+  kratos:
+    image: oryd/kratos:v1.0.0
+    extra_hosts:
+      - fundcatchup-host:host-gateway
+    ports:
+      - "4433:4433" #! public
+      - "4434:4434" #! admin
+    entrypoint: sh -c
+    command: '"kratos migrate sql up -y -e && kratos serve -c /home/ory/kratos.yml --watch-courier --sqa-opt-out"'
+    environment:
+      DSN: postgres://user:password@kratos-pg:5432/kratos?sslmode=disable
+    links:
+      - kratos-pg:kratos-pg
+      - mailslurper:mailslurper
+    volumes:
+      - ./ory:/home/ory
+  kratos-pg:
+    image: postgres:14.1
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=kratos
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - "4436:4436"
+      - "4437:4437"
+
   apollo-router:
     image: ghcr.io/apollographql/router:v1.25.0
     ports:
