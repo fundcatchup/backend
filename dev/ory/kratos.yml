@@ -12,7 +12,7 @@ serve:
 
 selfservice:
   # Not used, but needed for Kratos to run
-  default_browser_return_url: http://127.0.0.1:4455/
+  default_browser_return_url: http://fundcatchup.com
 
   methods:
     password:

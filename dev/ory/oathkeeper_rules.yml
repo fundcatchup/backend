@@ -20,6 +20,7 @@
 
 - id: fundcatchup-api
   upstream:
+    preserve_host: true
     url: "http://fundcatchup-host:4004"
   match:
     url: "<(http|https)>://<[a-zA-Z0-9-.:]+>/graphql"

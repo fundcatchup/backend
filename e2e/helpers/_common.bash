@@ -76,6 +76,12 @@ gql_file() {
   echo "${REPO_ROOT}/e2e/gql/$1.gql"
 }
 
+if [[ "${BATS_TEST_DIRNAME}" != "" ]]; then
+  run_cmd="run"
+else
+  run_cmd=""
+fi
+
 exec_graphql() {
   local token_name=$1
   local query_name=$2
@@ -87,12 +93,6 @@ exec_graphql() {
     AUTH_HEADER=""
   else
     AUTH_HEADER="Authorization: Bearer $(read_value "$token_name")"
-  fi
-
-  if [[ "${BATS_TEST_DIRNAME}" != "" ]]; then
-    run_cmd="run"
-  else
-    run_cmd=""
   fi
 
   gql_route="graphql"
