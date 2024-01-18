@@ -4,11 +4,11 @@ dsn: set-via-env
 
 serve:
   public:
-    base_url: http://127.0.0.1:4433/
+    base_url: http://localhost:4002/auth
     cors:
       enabled: true
   admin:
-    base_url: http://kratos:4434/
+    base_url: http://kratos:4434/ # private
 
 selfservice:
   # Not used, but needed for Kratos to run
@@ -29,7 +29,20 @@ selfservice:
       after:
         password:
           hooks:
-            - hook: session
+            - hook: show_verification_ui
+
+    verification:
+      use: code
+      enabled: true
+
+    login:
+      after:
+        hooks:
+          - hook: require_verified_address
+
+    recovery:
+      enabled: true
+      use: code
 
 log:
   level: debug
