@@ -12,17 +12,19 @@ serve:
 
 selfservice:
   # Not used, but needed for Kratos to run
-  default_browser_return_url: http://fundcatchup.com
+  default_browser_return_url: http://localhost:4002
 
   methods:
     password:
       enabled: true
     code:
       enabled: true
+    link:
+      enabled: true
 
   flows:
     error:
-      ui_url: http://fundcatchup.com/404
+      ui_url: http://localhost:4002
 
     registration:
       lifespan: 10m
