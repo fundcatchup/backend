@@ -45,6 +45,13 @@ selfservice:
     recovery:
       enabled: true
       use: code
+      after:
+        hooks:
+          - hook: revoke_active_sessions
+
+    settings:
+      privileged_session_max_age: 15m
+      required_aal: highest_available
 
 log:
   level: debug
