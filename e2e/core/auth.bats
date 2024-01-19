@@ -23,7 +23,7 @@ try_login() {
         -X POST \
         -H "Content-Type: application/json" \
         -d "{\"identifier\": \"$email\", \"password\": \"$1\", \"method\": \"password\"}" \
-        "http://localhost:4002/auth/self-service/login?flow=$flowId"
+        "${OATHKEEPER_PROXY}/auth/self-service/login?flow=$flowId"
 }
 
 @test "register: new user" {
@@ -37,7 +37,7 @@ try_login() {
         -X POST \
         -H "Content-Type: application/json" \
         -d "{\"traits.email\": \"$email\", \"password\": \"$password\", \"traits.name.first\": \"$firstName\", \"traits.name.last\": \"$lastName\", \"method\": \"password\"}" \
-        "http://localhost:4002/auth/self-service/registration?flow=$flowId"
+        "${OATHKEEPER_PROXY}/auth/self-service/registration?flow=$flowId"
 
     verificationFlowId=$(echo $output | jq -r '.continue_with.[].flow.id')
 
@@ -80,7 +80,7 @@ try_login() {
         -X POST \
         -H "Content-Type: application/json" \
         -d "{\"email\": \"$email\", \"method\": \"code\"}" \
-        "http://localhost:4002/auth/self-service/recovery?flow=$flowId"
+        "${OATHKEEPER_PROXY}/auth/self-service/recovery?flow=$flowId"
 
     code=$(get_kratos_code $email)
 
@@ -88,7 +88,7 @@ try_login() {
         -X POST \
         -H "Content-Type: application/json" \
         -d "{\"code\": \"$code\", \"method\": \"code\"}" \
-        "http://localhost:4002/auth/self-service/recovery?flow=$flowId"
+        "${OATHKEEPER_PROXY}/auth/self-service/recovery?flow=$flowId"
 
     session_token=$(cat $COOKIE_FILE | grep -oP 'ory_kratos_session\s+\K[^\s]+')
     [[ $session_token != "" ]] || exit 1
@@ -105,7 +105,7 @@ newPassword="1234@WordPass"
         -X POST \
         -H "Content-Type: application/json" \
         -d "{\"password\": \"$newPassword\", \"method\": \"password\", \"csrf_token\": \"$csrfToken\"}" \
-        "http://localhost:4002/auth/self-service/settings?flow=$flowId"
+        "${OATHKEEPER_PROXY}/auth/self-service/settings?flow=$flowId"
 
     [[ $(echo $output | jq -r '.state') == "success" ]] || exit 1
 }
@@ -117,5 +117,21 @@ newPassword="1234@WordPass"
 
 @test "login: with new password" {
     try_login $newPassword
-    [[ $(echo $output | jq -r '.session_token') != "null" ]] || exit 1
+
+    session_token=$(echo $output | jq -r '.session_token')
+    [[ $session_token != "null" ]] || exit 1
+
+    cache_value "session_token" $session_token
+}
+
+@test "whoami" {
+    session_token=$(read_value "session_token")
+
+    ${run_cmd} curl -s \
+        -X GET \
+        -H "X-Session-Token: $session_token" -H "Accept: application/json" \
+        "${OATHKEEPER_PROXY}/auth/sessions/whoami"
+
+    [[ $(echo $output | jq -r '.identity.traits.name.first') == "$firstName" ]] || exit 1
+    [[ $(echo $output | jq -r '.identity.traits.name.last') == "$lastName" ]] || exit 1
 }
