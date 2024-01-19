@@ -10,7 +10,7 @@ lastName="Chan"
 COOKIE_FILE=$CACHE_DIR/cookie.txt
 
 setup_file() {
-    rm $COOKIE_FILE
+    rm $COOKIE_FILE || true
 }
 
 try_login() {
