@@ -8,6 +8,7 @@ TILT_PID_FILE=$REPO_ROOT/e2e/.tilt_pid
 setup_suite() {
   background buck2 run //dev:up > "${REPO_ROOT}/e2e/.e2e-tilt.log"
   echo $! > "$TILT_PID_FILE"
+  await_stack_is_up
   await_api_is_up
 }
 
@@ -26,5 +27,11 @@ await_api_is_up() {
     [[ "${version}" = "0.0.0-development" ]] || exit 1
   }
 
+  tilt wait --timeout 1h --for=condition=Ready uiresources api
   retry 300 1 server_is_up
+}
+
+await_stack_is_up() {
+  retry 60 1 tilt wait --timeout 1h --for=condition=Ready uiresources oathkeeper
+  tilt wait --timeout 1h --for=condition=Ready uiresources kratos
 }
