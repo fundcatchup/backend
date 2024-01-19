@@ -27,11 +27,15 @@ await_api_is_up() {
     [[ "${version}" = "0.0.0-development" ]] || exit 1
   }
 
-  tilt wait --timeout 1h --for=condition=Ready uiresources api
   retry 300 1 server_is_up
 }
 
 await_stack_is_up() {
-  retry 60 1 tilt wait --timeout 1h --for=condition=Ready uiresources oathkeeper
-  tilt wait --timeout 1h --for=condition=Ready uiresources kratos
+  stack_up() {
+    tilt wait --timeout 1h --for=condition=Ready uiresources oathkeeper
+    tilt wait --timeout 1h --for=condition=Ready uiresources api
+    tilt wait --timeout 1h --for=condition=Ready uiresources kratos
+  }
+
+  retry 300 1 stack_up
 }
