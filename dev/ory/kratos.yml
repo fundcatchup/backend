@@ -1,0 +1,83 @@
+version: v0.13.0
+
+dsn: set-via-env
+
+serve:
+  public:
+    base_url: http://localhost:4002/auth
+    cors:
+      enabled: true
+  admin:
+    base_url: http://kratos:4434/ # private
+
+selfservice:
+  # Not used, but needed for Kratos to run
+  default_browser_return_url: http://localhost:4002
+
+  methods:
+    password:
+      enabled: true
+    code:
+      enabled: true
+    link:
+      enabled: true
+
+  flows:
+    error:
+      ui_url: http://localhost:4002
+
+    registration:
+      lifespan: 10m
+      after:
+        password:
+          hooks:
+            - hook: show_verification_ui
+
+    verification:
+      use: code
+      enabled: true
+
+    login:
+      after:
+        hooks:
+          - hook: require_verified_address
+
+    recovery:
+      enabled: true
+      use: code
+      after:
+        hooks:
+          - hook: revoke_active_sessions
+
+    settings:
+      privileged_session_max_age: 15m
+      required_aal: highest_available
+
+log:
+  level: debug
+  format: text
+  leak_sensitive_values: true
+
+secrets:
+  cookie:
+    - PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
+  cipher:
+    - 32-LONG-SECRET-NOT-SECURE-AT-ALL
+
+ciphers:
+  algorithm: xchacha20-poly1305
+
+hashers:
+  algorithm: bcrypt
+  bcrypt:
+    cost: 8
+
+identity:
+  default_schema_id: v0
+  schemas:
+    - id: v0
+      url: file:///home/ory/id-v0.schema.json
+
+courier:
+  smtp:
+    connection_uri: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true

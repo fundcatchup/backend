@@ -3,6 +3,9 @@ log:
   format: json
 
 authenticators:
+  noop:
+    enabled: true
+
   bearer_token:
     enabled: true
     config:
@@ -20,6 +23,9 @@ authorizers:
     enabled: true
 
 mutators:
+  noop:
+    enabled: true
+
   header:
     enabled: true
     config:
