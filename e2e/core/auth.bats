@@ -140,7 +140,7 @@ newPassword="1234@WordPass"
     cache_value "user_id" $user_id
 }
 
-@test "authenticated graphql request: test flow: oathkeeper (<> kratos) <> application" {
+@test "authenticated graphql: test flow between oathkeeper (<> kratos) <> application" {
     exec_graphql "session_token" "whoami"
 
     user_id_from_whoami_gql=$(graphql_output | jq -r '.data.whoami')
@@ -149,7 +149,7 @@ newPassword="1234@WordPass"
     [[ $user_id_from_whoami_gql == $user_id_from_cache ]] || exit 1
 }
 
-@test "unauthenticated graphql requst: whoami is null" {
+@test "unauthenticated graphql: whoami is null" {
     exec_graphql "anon" "whoami"
 
     [[ $(graphql_output | jq -r '.data.whoami') == "null" ]] || exit 1
