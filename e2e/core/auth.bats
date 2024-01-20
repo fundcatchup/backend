@@ -110,12 +110,12 @@ newPassword="1234@WordPass"
     [[ $(echo $output | jq -r '.state') == "success" ]] || exit 1
 }
 
-@test "login: with old password" {
+@test "login: should fail with old password" {
     try_login $password
     [[ $(echo $output | jq -r '.session_token') == "null" ]] || exit 1
 }
 
-@test "login: with new password" {
+@test "login: should succeed with new password" {
     try_login $newPassword
 
     session_token=$(echo $output | jq -r '.session_token')
@@ -134,4 +134,23 @@ newPassword="1234@WordPass"
 
     [[ $(echo $output | jq -r '.identity.traits.name.first') == "$firstName" ]] || exit 1
     [[ $(echo $output | jq -r '.identity.traits.name.last') == "$lastName" ]] || exit 1
+
+    user_id=$(echo $output | jq -r '.identity.id')
+    [[ $user_id != "" ]] || exit 1
+    cache_value "user_id" $user_id
+}
+
+@test "authenticated graphql: test flow between oathkeeper (<> kratos) <> application" {
+    exec_graphql "session_token" "whoami"
+
+    user_id_from_whoami_gql=$(graphql_output | jq -r '.data.whoami')
+    user_id_from_cache=$(read_value "user_id")
+
+    [[ $user_id_from_whoami_gql == $user_id_from_cache ]] || exit 1
+}
+
+@test "unauthenticated graphql: whoami is null" {
+    exec_graphql "anon" "whoami"
+
+    [[ $(graphql_output | jq -r '.data.whoami') == "null" ]] || exit 1
 }

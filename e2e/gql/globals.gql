@@ -1,5 +1,0 @@
-query Globals {
-  globals {
-    version
-  }
-}

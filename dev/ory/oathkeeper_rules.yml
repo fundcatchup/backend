@@ -31,4 +31,5 @@
   authorizer:
     handler: allow
   mutators:
-    - handler: header
+    - handler: id_token
+    - handler: noop

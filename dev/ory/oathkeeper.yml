@@ -9,9 +9,10 @@ authenticators:
   bearer_token:
     enabled: true
     config:
-      check_session_url: http://fundcatchup-host:3458/sessions
+      check_session_url: http://fundcatchup-host:4433/sessions/whoami
       preserve_path: true
-      subject_from: subject.id
+      subject_from: identity.id
+      extra_from: "@this"
   
   anonymous:
     enabled: true
@@ -26,13 +27,15 @@ mutators:
   noop:
     enabled: true
 
-  header:
+  id_token:
     enabled: true
     config:
-      headers:
-        X-User-ID: "{{ print .Subject }}"
-        X-Session-ID: "{{ print .Extra.session_id }}"
-        authorization: "" # redact the authorization token
+      issuer_url: https://fundcatchup.com
+      jwks_url: file:///home/ory/id-token.jwks.json
+      claims: |
+        {
+          "session": {{ .Extra | toJson }}
+        }
 
 errors:
   fallback:

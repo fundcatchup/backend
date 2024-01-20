@@ -22,9 +22,8 @@ teardown_suite() {
 
 await_api_is_up() {
   server_is_up() {
-    exec_graphql 'anon' 'globals'
-    version="$(graphql_output '.data.globals.version')"
-    [[ "${version}" = "0.0.0-development" ]] || exit 1
+    exec_graphql 'anon' 'whoami'
+    [[ $(graphql_output | jq -r '.data.whoami') == "null" ]] || exit 1
   }
 
   retry 300 1 server_is_up
