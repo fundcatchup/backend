@@ -134,12 +134,23 @@ newPassword="1234@WordPass"
 
     [[ $(echo $output | jq -r '.identity.traits.name.first') == "$firstName" ]] || exit 1
     [[ $(echo $output | jq -r '.identity.traits.name.last') == "$lastName" ]] || exit 1
+
+    user_id=$(echo $output | jq -r '.identity.id')
+    [[ $user_id != "" ]] || exit 1
+    cache_value "user_id" $user_id
 }
 
 @test "authenticated graphql request: test flow: oathkeeper (<> kratos) <> application" {
-    exec_graphql "session_token" "globals"
+    exec_graphql "session_token" "whoami"
 
-    graphql_output
+    user_id_from_whoami_gql=$(graphql_output | jq -r '.data.whoami')
+    user_id_from_cache=$(read_value "user_id")
 
-    exit 1
+    [[ $user_id_from_whoami_gql == $user_id_from_cache ]] || exit 1
+}
+
+@test "unauthenticated graphql requst: whoami is null" {
+    exec_graphql "anon" "whoami"
+
+    [[ $(graphql_output | jq -r '.data.whoami') == "null" ]] || exit 1
 }

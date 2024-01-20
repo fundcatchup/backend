@@ -1,7 +1,7 @@
 mod config;
 pub use config::ServerConfig;
 
-mod middleware;
+mod auth_middleware;
 
 use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
@@ -11,16 +11,18 @@ use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer}
 mod graphql;
 pub use graphql::schema;
 
-use crate::app::ApiApp;
+use crate::{app::ApiApp, primitives::*};
 
 pub async fn graphql_handler(
     schema: Extension<Schema<graphql::Query, graphql::Mutation, EmptySubscription>>,
     Extension(config): Extension<ServerConfig>,
+    Extension(user_id): Extension<Option<UserId>>,
     req: GraphQLRequest,
 ) -> GraphQLResponse {
     let mut req = req.into_inner();
 
     req = req.data(config);
+    req = req.data(user_id);
 
     schema.execute(req).await.into()
 }
@@ -40,7 +42,10 @@ async fn run_api_gql_server(config: ServerConfig, api_app: ApiApp) -> anyhow::Re
         .layer(OtelAxumLayer::default())
         .layer(Extension(schema))
         .layer(Extension(config.clone()))
-        .route_layer(axum::middleware::from_fn(middleware::extract_user_id));
+        .route_layer(axum::middleware::from_fn_with_state(
+            config.clone(),
+            auth_middleware::extract_user_id,
+        ));
 
     println!("Starting graphql server on port {}", config.api_server_port);
     axum::Server::bind(&std::net::SocketAddr::from((

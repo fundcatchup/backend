@@ -1,2 +1,3 @@
 server:
   api_server_port: 4051
+  jwks_url: http://localhost:4456/.well-known/jwks.json

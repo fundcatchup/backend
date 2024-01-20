@@ -6,6 +6,7 @@ services:
     command: serve -c /home/ory/oathkeeper.yml --sqa-opt-out
     ports:
       - 4002:4455
+      - 4456:4456 #! Internal
     extra_hosts:
       - fundcatchup-host:host-gateway
     volumes:

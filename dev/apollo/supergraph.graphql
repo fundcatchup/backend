@@ -55,5 +55,5 @@ type Mutation
 type Query
   @join__type(graph: API)
 {
-  globals: Globals!
+  whoami: String
 }
