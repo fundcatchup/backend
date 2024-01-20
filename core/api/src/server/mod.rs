@@ -1,6 +1,8 @@
 mod config;
 pub use config::ServerConfig;
 
+mod middleware;
+
 use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::{routing::get, Extension, Router};
@@ -37,7 +39,8 @@ async fn run_api_gql_server(config: ServerConfig, api_app: ApiApp) -> anyhow::Re
         .layer(OtelInResponseLayer::default())
         .layer(OtelAxumLayer::default())
         .layer(Extension(schema))
-        .layer(Extension(config.clone()));
+        .layer(Extension(config.clone()))
+        .route_layer(axum::middleware::from_fn(middleware::extract_user_id));
 
     println!("Starting graphql server on port {}", config.api_server_port);
     axum::Server::bind(&std::net::SocketAddr::from((

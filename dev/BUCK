@@ -44,6 +44,11 @@ sh_binary(
   main = "bin/update-schemas.sh",
 )
 
+sh_binary(
+  name = "generate-jwks",
+  main = "bin/generate-jwks.sh",
+)
+
 test_suite(
     name = "check-sdls",
     tests = [

@@ -81,6 +81,7 @@
           rover
           pythonEnv
           grpcurl
+          jose
         ]
         ++ buck2NativeBuildInputs
         ++ lib.optionals pkgs.stdenv.isLinux [

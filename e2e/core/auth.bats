@@ -110,12 +110,12 @@ newPassword="1234@WordPass"
     [[ $(echo $output | jq -r '.state') == "success" ]] || exit 1
 }
 
-@test "login: with old password" {
+@test "login: should fail with old password" {
     try_login $password
     [[ $(echo $output | jq -r '.session_token') == "null" ]] || exit 1
 }
 
-@test "login: with new password" {
+@test "login: should succeed with new password" {
     try_login $newPassword
 
     session_token=$(echo $output | jq -r '.session_token')
@@ -134,4 +134,12 @@ newPassword="1234@WordPass"
 
     [[ $(echo $output | jq -r '.identity.traits.name.first') == "$firstName" ]] || exit 1
     [[ $(echo $output | jq -r '.identity.traits.name.last') == "$lastName" ]] || exit 1
+}
+
+@test "authenticated graphql request: test flow: oathkeeper (<> kratos) <> application" {
+    exec_graphql "session_token" "globals"
+
+    graphql_output
+
+    exit 1
 }
