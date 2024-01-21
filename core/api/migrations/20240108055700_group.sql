@@ -12,7 +12,7 @@ CREATE TABLE Grp(
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   type GrpType NULL DEFAULT NULL,
-  picture TEXT NOT NULL
+  picture TEXT
 );
 
 CREATE TABLE GrpMembers(

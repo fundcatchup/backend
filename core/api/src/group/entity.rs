@@ -16,6 +16,7 @@ pub enum GroupType {
 
 #[derive(Debug, InputObject)]
 pub struct NewGroup {
+    #[graphql(validator(min_length = 3))]
     pub name: String,
     #[graphql(name = "type")]
     pub typ: Option<GroupType>,
