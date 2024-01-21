@@ -1,17 +1,46 @@
-type Globals {
-	version: String!
+type Group {
+	id: GroupId!
+	name: String!
+	type: GroupType
+	"""
+	Group Cover Picture in base64 format
+	"""
+	pic: String
+	members: [UserId!]!
+}
+
+scalar GroupId
+
+enum GroupType {
+	FRIENDS
+	TRIP
+	HOME
+	COUPLE
+	OTHER
 }
 
 
 
 type Mutation {
-	globals2: Globals!
+	createGroup(newGroup: NewGroup!): Group!
+}
+
+input NewGroup {
+	name: String!
+	type: GroupType
+	"""
+	Group Cover Picture in base64 format
+	"""
+	pic: String
+	members: [UserId!]!
 }
 
 type Query {
 	whoami: String
 }
 
+
+scalar UserId
 
 extend schema @link(
 	url: "https://specs.apollo.dev/federation/v2.3",

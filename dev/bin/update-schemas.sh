@@ -4,6 +4,7 @@ set -e
 
 TARGETS=(
     "//core/api:update-schema"
+    "//dev:update-supergraph"
 )
 
 buck2 build "${TARGETS[@]}"

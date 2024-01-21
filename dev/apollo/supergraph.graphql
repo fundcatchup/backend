@@ -20,10 +20,29 @@ directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on
 
 directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
 
-type Globals
+type Group
   @join__type(graph: API)
 {
-  version: String!
+  id: GroupId!
+  name: String!
+  type: GroupType
+
+  """Group Cover Picture in base64 format"""
+  pic: String
+  members: [UserId!]!
+}
+
+scalar GroupId
+  @join__type(graph: API)
+
+enum GroupType
+  @join__type(graph: API)
+{
+  FRIENDS @join__enumValue(graph: API)
+  TRIP @join__enumValue(graph: API)
+  HOME @join__enumValue(graph: API)
+  COUPLE @join__enumValue(graph: API)
+  OTHER @join__enumValue(graph: API)
 }
 
 scalar join__FieldSet
@@ -49,7 +68,18 @@ enum link__Purpose {
 type Mutation
   @join__type(graph: API)
 {
-  globals2: Globals!
+  createGroup(newGroup: NewGroup!): Group!
+}
+
+input NewGroup
+  @join__type(graph: API)
+{
+  name: String!
+  type: GroupType
+
+  """Group Cover Picture in base64 format"""
+  pic: String
+  members: [UserId!]!
 }
 
 type Query
@@ -57,3 +87,6 @@ type Query
 {
   whoami: String
 }
+
+scalar UserId
+  @join__type(graph: API)
