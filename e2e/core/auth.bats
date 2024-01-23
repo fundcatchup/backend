@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 source 'e2e/helpers/_common.bash'
-source 'e2e/helpers/kratos.bash'
+source 'e2e/helpers/auth.bash'
 
 password="123@WordPass"
 firstName="Jackie"
@@ -11,19 +11,6 @@ COOKIE_FILE=$CACHE_DIR/cookie.txt
 
 setup_file() {
     rm $COOKIE_FILE || true
-}
-
-try_login() {
-    ${run_cmd} curl -s -X GET "${OATHKEEPER_PROXY}/auth/self-service/login/api"
-    flowId=$(echo $output | jq -r '.id')
-
-    email=$(read_value "email")
-
-    ${run_cmd} curl -s \
-        -X POST \
-        -H "Content-Type: application/json" \
-        -d "{\"identifier\": \"$email\", \"password\": \"$1\", \"method\": \"password\"}" \
-        "${OATHKEEPER_PROXY}/auth/self-service/login?flow=$flowId"
 }
 
 @test "register: new user" {
@@ -46,7 +33,7 @@ try_login() {
 }
 
 @test "login: can't login unverified user" {
-    try_login $password
+    try_login $(read_value "email") $password
 
     # Account not active yet. Did you forget to verify your email address?
     [[ $(echo $output | jq -r '.ui.messages.[].id') == "4000010" ]] || exit 1
@@ -66,7 +53,7 @@ try_login() {
 }
 
 @test "login: verified user" {
-    try_login $password
+    try_login $(read_value "email") $password
     [[ $(echo $output | jq -r '.session_token') != "null" ]] || exit 1
 }
 
@@ -111,12 +98,12 @@ newPassword="1234@WordPass"
 }
 
 @test "login: should fail with old password" {
-    try_login $password
+    try_login $(read_value "email") $password
     [[ $(echo $output | jq -r '.session_token') == "null" ]] || exit 1
 }
 
 @test "login: should succeed with new password" {
-    try_login $newPassword
+    try_login $(read_value "email") $newPassword
 
     session_token=$(echo $output | jq -r '.session_token')
     [[ $session_token != "null" ]] || exit 1

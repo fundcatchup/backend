@@ -1,0 +1,37 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO Grp(name, type, picture)\n            VALUES ($1, $2, $3)\n            RETURNING id;\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        {
+          "Custom": {
+            "name": "grptype",
+            "kind": {
+              "Enum": [
+                "FRIENDS",
+                "TRIP",
+                "HOME",
+                "COUPLE",
+                "OTHER"
+              ]
+            }
+          }
+        },
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "ec0d47b5acd149a704dd5dce369a3f60eabdfb5d0f999ca3c253f050cf0b53aa"
+}

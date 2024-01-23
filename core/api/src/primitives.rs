@@ -1,1 +1,1 @@
-pub use common::UserId;
+pub use common::{GroupId, UserId};

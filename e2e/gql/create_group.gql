@@ -1,0 +1,9 @@
+mutation CreateGroup($newGroup: NewGroup!) {
+  createGroup(newGroup: $newGroup) {
+    id
+    name
+    type
+    pic
+    members
+  }
+}

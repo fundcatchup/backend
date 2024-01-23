@@ -5,6 +5,7 @@ pub mod cli;
 pub use server::schema;
 
 mod app;
+mod group;
 mod server;
 
 mod error;

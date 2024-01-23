@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO GrpMembers(grp_id, uid)\n            SELECT $1, UNNEST($2::UUID[])\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "UuidArray"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "54006b49b65eb61b78d5c1692b430a4b1419d0836f1ed0493e1168c297237fb1"
+}
