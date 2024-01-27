@@ -57,7 +57,7 @@ selfservice:
 log:
   level: debug
   format: text
-  leak_sensitive_values: true
+  leak_sensitive_values: false
 
 secrets:
   cookie:
@@ -88,13 +88,5 @@ courier:
     enabled: true
     from: FundCatchup
     request_config:
-      url: https://api.twilio.com/2010-04-01/Accounts/AXXXXXXXXXXXXXX/Messages.json
-      method: POST
-      body: base64://ZnVuY3Rpb24oY3R4KSB7ClRvOiBjdHguUmVjaXBpZW50LApCb2R5OiBjdHguQm9keSwKfQ==
-      headers:
-        Content-Type: application/x-www-form-urlencoded
-      auth:
-        type: basic_auth
-        config:
-          user: AXXXXXXX
-          password: XXXX
+      url: https://ifconfig.me
+      method: GET

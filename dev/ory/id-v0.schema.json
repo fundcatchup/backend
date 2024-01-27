@@ -38,7 +38,7 @@
               }
             },
             "verification": {
-              "via": "phone"
+              "via": "sms"
             }
           }
         },
