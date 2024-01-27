@@ -26,21 +26,29 @@
             }
           }
         },
-        "name": {
-          "type": "object",
-          "properties": {
-            "first": {
-              "title": "First Name",
-              "type": "string"
+        "phone": {
+          "type": "string",
+          "format": "tel",
+          "title": "Phone number",
+          "minLength": 3,
+          "ory.sh/kratos": {
+            "credentials": {
+              "password": {
+                "identifier": true
+              }
             },
-            "last": {
-              "title": "Last Name",
-              "type": "string"
+            "verification": {
+              "via": "sms"
             }
           }
+        },
+        "fullName": {
+          "title": "Full Name",
+          "type": "string",
+          "minLength": 3
         }
       },
-      "required": ["email"],
+      "required": ["email", "phone"],
       "additionalProperties": false
     }
   }

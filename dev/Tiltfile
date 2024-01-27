@@ -27,7 +27,7 @@ local_resource(
 
 docker_compose("./docker-compose.deps.yml", project_name = "fundcatchup-dev")
 docker_groups = {
-    "auth": ["oathkeeper", "kratos", "kratos-pg", "mailslurper"],
+    "auth": ["oathkeeper", "kratos", "kratos-migrate", "kratos-pg", "mailslurper"],
     "api": ["apollo-router", "api-pg"],
     "tracing": ["otel-agent"]
 }

@@ -32,6 +32,7 @@ selfservice:
         password:
           hooks:
             - hook: show_verification_ui
+            # Add Web Hook
 
     verification:
       use: code
@@ -56,7 +57,7 @@ selfservice:
 log:
   level: debug
   format: text
-  leak_sensitive_values: true
+  leak_sensitive_values: false
 
 secrets:
   cookie:
@@ -80,4 +81,12 @@ identity:
 
 courier:
   smtp:
+    from_name: FundCatchup
+    from_address: no-reply@fundcatchup.com
     connection_uri: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true
+  sms:
+    enabled: true
+    from: FundCatchup
+    request_config:
+      url: https://ifconfig.me
+      method: GET
